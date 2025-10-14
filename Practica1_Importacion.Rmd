@@ -40,6 +40,11 @@ El objetivo de esta práctica es realizar la importación de ficheros con difere
   5. `ERCA.xls ———————————————————————————————————————> ERCA.RData`
   6. `subjectInfo.xlsx ———————————————————————————————> Pacientes.RData`
 
+```{r}
+library(readr)
+```
+
+
 ## Crea un proyecto
 
 Para cada práctica crea un nuevo proyecto con:
@@ -69,6 +74,13 @@ Usa siempre rutas referidas a la carpeta, en la que se encuentra el fichero fuen
 
 ```{r}
 fname <- 'data/DFP1_11122015 124700.csv'
+
+df<-read.csv(fname,sep="\t",stringsAsFactors=F)
+
+df$FECHA<-as.POSIXlt(df$FECHA)
+df$HORA<-as.hms(df$HORA)
+
+save(file='./data/DFP1.RData',list=c("df"))
 ```
 
 ## Inspección de los datos
@@ -77,6 +89,14 @@ Inspecciona los datos con `str`, `head`, `tail` y `summary`.
 
 ```{r}
 # str, head, tail, summary
+
+print(str(df))
+
+print(head(df,10))
+
+print(tail(df,10))
+
+print(summary(df))
 ```
 
 
@@ -95,6 +115,11 @@ Otra opción es usar la librería `readr` para especificar directamente el tipo 
 ```{r}
 library(readr)
 filename <- "data/BreadBasket_DMS.csv"
+
+BreadBasket_DMS <- read_csv("data/BreadBasket_DMS.csv")
+View(BreadBasket_DMS)
+
+save(BreadBasket_DMS, file = "./data/BreadBasket_DMS.RData")
 ```
 
 ## Inspección de los datos
@@ -103,6 +128,13 @@ Inspecciona los datos con `str`, `head`, `tail` y `summary`.
 
 ```{r}
 # dim, str, ...
+print(str(BreadBasket_DMS))
+
+print(head(BreadBasket_DMS,10))
+
+print(tail(BreadBasket_DMS,10))
+
+print(summary(BreadBasket_DMS))
 ```
 
 
@@ -119,6 +151,10 @@ Podemos leer ficheros de IBM SPSS mediante la librería `haven`.
 ```{r}
 library(haven)
 filename <- "data/PsychBike.sav"
+
+PsychBike<-read_sav(filename)
+
+save(file="data/PsychBike.Rdata",PsychBike)
 ```
 
 ## Inspección de los datos
