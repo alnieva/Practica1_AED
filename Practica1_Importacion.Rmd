@@ -163,6 +163,14 @@ Inspecciona los datos con `str`, `head`, `tail` y `summary`.
 
 ```{r}
 # dim, str, etc.
+print(str(PsychBike))
+
+print(head(PsychBike,10))
+
+print(tail(PsychBike,10))
+
+print(summary(PsychBike))
+
 ```
 
 
@@ -190,6 +198,14 @@ En R podemos importar ficheros JSON con la librería `jsonlite`. Las funciones m
 ```{r}
 library(jsonlite)
 filename <- 'data/FileCodificado.json'
+
+FileCodificado<-read_json("data/FileCodificado.json",simplifyVector = TRUE)
+
+FileCodificado_file<-read_file("data/FileCodificado.json")
+
+FileCodificado_file<-fromJSON(FileCodificado_file)
+
+save(file="data/FileCodificado.Rdata",FileCodificado)
 ```
 
 ## Inspección de los datos
@@ -198,6 +214,14 @@ Inspecciona los datos con `str`, `head`, `tail` y `summary`.
 
 ```{r}
 # str, head, tail, summary
+print(str(FileCodificado))
+
+print(head(FileCodificado,10))
+
+print(tail(FileCodificado,10))
+
+print(summary(FileCodificado))
+
 ```
 
 ## Extra: exportar datos en formato JSON
@@ -209,6 +233,9 @@ Es importante saber cómo exportar datos en este formato.
 
 ```{r}
 # ...
+write_json(iris, path = "./data/iris.json", pretty = FALSE)
+
+iris_json<-toJSON(iris)
 ```
 
 
