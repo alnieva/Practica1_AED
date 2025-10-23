@@ -74,6 +74,7 @@ Usa siempre rutas referidas a la carpeta, en la que se encuentra el fichero fuen
 
 ```{r}
 fname <- 'data/DFP1_11122015 124700.csv'
+library(hms)
 
 df<-read.csv(fname,sep="\t",stringsAsFactors=F)
 
@@ -265,10 +266,27 @@ df <- read_excel(fname, sheet=2) # El formato de las fechas no es correcto
 # Es más fácil ver cuales NO son 'numeric'.
 # Definir los tipos de datos en 'ct' y releer con 'read_excel'.
 # df <- read_excel(fname, sheet=2, col_types=ct)
+
+
+
+
+ERCA <- read_excel(
+  "./data/ERCA.xlsx",
+  col_types = c("date", "text", "numeric", "numeric", "text"),
+)
+
+ERCA <- read_excel("data/ERCA.xlsx", sheet = "Hoja1 - Tabla 1")
+
+ERCA<-ERCA[-which(ERCA[,1] == "IDENTIFICA"),]
+
+str(ERCA)
+
+head(ERCA)
 ```
 
 ```{r}
 # save()
+save(file="data/ERCA.RData",ERCA)
 ```
 
 ## Inspección de los datos
@@ -279,6 +297,16 @@ df <- read_excel(fname, sheet=2) # El formato de las fechas no es correcto
 ```{r}
 # Conviene limpiar primero un poco => eliminar is.na, etc.
 # head, tail, str, summary
+print(str(ERCA))
+
+print(head(ERCA,10))
+
+print(tail(ERCA,10))
+
+print(summary(ERCA))
+
+ERCA<-ERCA[-which(is.na(ERCA[,1])),]
+
 ```
 
 
@@ -297,11 +325,42 @@ filename <- "data/subjectInfo.xlsx"
   3. En lugar de un bucle for usa `lapply`
       -  Recuerda que `lapply` aplica una función a todos los elementos de un vector o lista y devuelve **una lista** con los resultados obtenidos.
       -  Hay que definir una función que llame a `read_excel` y que tome como parámetro la hoja a leer.
-      -  La lista de devuelta por `lapply` no tiene nombres. Podemos nombrar esta lista con `names(x) <- sheets`, donde `x` es la lista obtenida con `lapply`, y `sheets` los nombres de las hojas obtenidas con excel_sheets`.
+      -  La lista devuelta por `lapply` no tiene nombres. Podemos nombrar esta lista con `names(x) <- sheets`, donde `x` es la lista obtenida con `lapply`, y `sheets` los nombres de las hojas obtenidas con excel_sheets`.
   4. Como siempre al final guardamos el resultado con `save`.
 
 ```{r}
-# save()
+  
+library(readxl)
+
+#1.
+measurments<-read_excel(filename, sheet="measurments")
+neurophaty<-read_excel(filename, sheet="neuropathy")
+tuning_fork_NSS<-read_excel(filename, sheet="tuning fork NSS")
+mobility<-read_excel(filename, sheet="mobility")
+Durometer<-read_excel(filename, sheet="Durometer")
+
+
+#2.
+sheets<-excel_sheets(filename)
+
+
+#3.
+df<-list()
+
+
+for (i in sheets){
+  df[[i]]<-read_excel(filename, sheet=i)
+}
+
+
+#4.
+
+df_lapply<-lapply(sheets,function(sheets){read_excel(filename, sheet=sheets)})
+
+names(df_lapply)<-sheets
+
+
+save(file='./data/df_lapply.RData',list=c("df_lapply"))
 ```
 
 ## Inspección de los datos
@@ -310,4 +369,10 @@ Inspecciona los datos con `str` (jugar con `max.level`), `head`, `tail` y `summa
 
 ```{r}
 # str, head, tail, summary
+str(df_lapply,max.level = 10)
+head(df_lapply, max.level=5)
+tail(df_lapply, max.level=20)
+summary(df_lapply, max.level=1)
+
+
 ```
